@@ -19,7 +19,6 @@ export async function PATCH(request: NextRequest, {params}: { params: { id: stri
         where: { id: parseInt(params.id)},
         data: {
             title: body.title,
-            status: body.status,
             description: body.description
         }
     })
