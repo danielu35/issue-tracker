@@ -13,10 +13,7 @@ import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { AiFillInfoCircle } from "react-icons/ai";
 import { z } from "zod";
-
-const SimpleMDE = dynamic(() => import("react-simplemde-editor"), {
-  ssr: false,
-});
+import SimpleMDE from "react-simplemde-editor";
 
 type IssueFormData = z.infer<typeof issueSchema>;
 
