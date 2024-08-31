@@ -2,13 +2,15 @@
 
 import { Issues } from "@prisma/client";
 import { AlertDialog, Button, Flex } from "@radix-ui/themes";
-import React from "react";
+import axios from "axios";
+import { useRouter } from "next/navigation";
 
 interface Props {
   issue: Issues;
 }
 
 const DeleteIssueButton = ({ issue }: Props) => {
+  const route = useRouter();
   return (
     <AlertDialog.Root>
       <AlertDialog.Trigger>
@@ -28,7 +30,15 @@ const DeleteIssueButton = ({ issue }: Props) => {
             </Button>
           </AlertDialog.Cancel>
           <AlertDialog.Action>
-            <Button variant="solid" color="red">
+            <Button
+              variant="solid"
+              color="red"
+              onClick={async () => {
+                await axios.delete("/api/issues/" + issue.id);
+                route.push("/issues");
+                route.refresh();
+              }}
+            >
               Delete
             </Button>
           </AlertDialog.Action>
