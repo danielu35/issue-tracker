@@ -1,12 +1,12 @@
 import { Table } from "@radix-ui/themes";
 import { Skeleton } from "../component";
-import IssuesToolBar from "./IssuesToolBar";
+import IssueActions from "./IssueActions";
 
 const LoadingIssuesPage = () => {
   const issues = [1, 2, 3, 4, 5];
   return (
     <>
-      <IssuesToolBar />
+      <IssueActions />
       <Table.Root variant="surface">
         <Table.Header>
           <Table.ColumnHeaderCell>Issues</Table.ColumnHeaderCell>
