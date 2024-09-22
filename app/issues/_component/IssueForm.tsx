@@ -62,24 +62,27 @@ const IssueForm = ({ issue }: Props) => {
           {...register("title")}
         />
         <ErrorMessage>{errors.title?.message}</ErrorMessage>
-        <Controller
-          name="status"
-          control={control}
-          defaultValue={issue?.status}
-          render={({ field }) => (
-            <Select.Root value={field.value} onValueChange={field.onChange}>
-              <Select.Trigger />
-              <Select.Content>
-                <Select.Group>
-                  <Select.Label>Status</Select.Label>
-                  <Select.Item value="OPEN">Open</Select.Item>
-                  <Select.Item value="IN_PROGRESS">In Progress</Select.Item>
-                  <Select.Item value="CLOSED">Closed</Select.Item>
-                </Select.Group>
-              </Select.Content>
-            </Select.Root>
-          )}
-        />
+        {issue && (
+          <Controller
+            name="status"
+            control={control}
+            defaultValue={issue?.status}
+            render={({ field }) => (
+              <Select.Root value={field.value} onValueChange={field.onChange}>
+                <Select.Trigger />
+                <Select.Content>
+                  <Select.Group>
+                    <Select.Label>Status</Select.Label>
+                    <Select.Item value="OPEN">Open</Select.Item>
+                    <Select.Item value="IN_PROGRESS">In Progress</Select.Item>
+                    <Select.Item value="CLOSED">Closed</Select.Item>
+                  </Select.Group>
+                </Select.Content>
+              </Select.Root>
+            )}
+          />
+        )}
+        {/* <ErrorMessage>{errors.status?.message}</ErrorMessage> */}
         <Controller
           name="description"
           control={control}
