@@ -4,10 +4,14 @@ import { IssueStatusBadge, Link } from "@/app/component";
 import NextLink from "next/link";
 import IssueActions from "./IssueActions";
 import { Issues, Status } from "@prisma/client";
-import { ArrowUpIcon } from "@radix-ui/react-icons";
+import { ArrowDownIcon, ArrowUpIcon } from "@radix-ui/react-icons";
 
 interface Prop {
-  searchParams: { status: Status; orderBy: keyof Issues };
+  searchParams: {
+    status: Status;
+    orderBy: keyof Issues;
+    sortOrder: "asc" | "desc";
+  };
 }
 
 const IssuesPage = async ({ searchParams }: Prop) => {
@@ -15,12 +19,6 @@ const IssuesPage = async ({ searchParams }: Prop) => {
   const status = statuses.includes(searchParams.status)
     ? searchParams.status
     : undefined;
-
-  const issues = await prisma.issues.findMany({
-    where: {
-      status: status,
-    },
-  });
 
   const headerTitle: {
     label: string;
@@ -31,6 +29,23 @@ const IssuesPage = async ({ searchParams }: Prop) => {
     { label: "Status", value: "status", className: "hidden md:table-cell" },
     { label: "Created", value: "createdAt", className: "hidden md:table-cell" },
   ];
+
+  const orderBy = headerTitle
+    .map((title) => title.value)
+    .includes(searchParams.orderBy)
+    ? { [searchParams.orderBy]: searchParams.sortOrder }
+    : undefined;
+
+  const issues = await prisma.issues.findMany({
+    where: {
+      status: status,
+    },
+    orderBy,
+  });
+
+  const getNextSortOrder = (currentSortOrder: "asc" | "desc") => {
+    return currentSortOrder === "asc" ? "desc" : "asc";
+  };
 
   return (
     <div>
@@ -45,11 +60,25 @@ const IssuesPage = async ({ searchParams }: Prop) => {
               >
                 {/* {title.label} */}
                 <NextLink
-                  href={{ query: { ...searchParams, orderBy: title.value } }}
+                  href={{
+                    query: {
+                      ...searchParams,
+                      orderBy: title.value,
+                      sortOrder:
+                        searchParams.orderBy === title.value
+                          ? getNextSortOrder(searchParams.sortOrder)
+                          : "asc",
+                    },
+                  }}
                 >
                   {title.label}
                 </NextLink>
-                {title.value === searchParams.orderBy && <ArrowUpIcon className="inline" />}
+                {title.value === searchParams.orderBy &&
+                  (searchParams.sortOrder === "asc" ? (
+                    <ArrowUpIcon className="inline" />
+                  ) : (
+                    <ArrowDownIcon className="inline" />
+                  ))}
               </Table.ColumnHeaderCell>
             ))}
           </Table.Row>
