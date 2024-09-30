@@ -1,29 +1,38 @@
 import prisma from "@/prisma/client";
-// import { Status } from "@prisma/client";
 import { Flex } from "@radix-ui/themes";
 import { Metadata } from "next";
 import Pagination from "../component/Pagination";
 import IssuesTable, { columnNames, IssueQuery } from "./_component/IssuesTable";
-import { Status } from "./_component/status";
+import { Status } from "./_component/status"; // Assuming this is your custom enum
 import IssueActions from "./IssueActions";
+import { Suspense } from "react";
 
 interface Prop {
   searchParams: IssueQuery;
 }
 
 const IssuesPage = async ({ searchParams }: Prop) => {
-  const statuses = Object?.values(Status);
-  const status = statuses.includes(searchParams.status)
-    ? searchParams.status
-    : undefined;
-  const where = { status };
+  const {
+    status: searchStatus,
+    orderBy: searchOrderBy,
+    sortOrder,
+    page: pageParam,
+  } = searchParams;
 
-  const orderBy = columnNames.includes(searchParams.orderBy)
-    ? { [searchParams.orderBy]: searchParams.sortOrder }
+  // Check if the provided status is a valid key in your custom `Status` enum
+  const validStatus =
+    searchStatus && Object.values(Status).includes(searchStatus as Status)
+      ? (searchStatus as Status)
+      : undefined;
+
+  // Construct the where clause
+  const where = validStatus ? { status: validStatus } : {};
+
+  const orderBy = columnNames.includes(searchOrderBy)
+    ? { [searchOrderBy]: sortOrder }
     : undefined;
 
-  const page = parseInt(searchParams.page) || 1;
-  // Add a drop down to allow user to select the page size. TODO
+  const page = parseInt(pageParam) || 1; // Use the pageParam directly
   const pageSize = 10;
 
   const issues = await prisma.issues.findMany({
@@ -53,6 +62,10 @@ export const metadata: Metadata = {
   description: "View all project issues",
 };
 
-// export const dynamic = "force-dynamic";
+const WrappedIssuesPage = (props: Prop) => (
+  <Suspense fallback={<div>Loading...</div>}>
+    <IssuesPage {...props} />
+  </Suspense>
+);
 
-export default IssuesPage;
+export default WrappedIssuesPage;
