@@ -1,7 +1,7 @@
 import authOptions from "@/app/auth/authOptions";
 import prisma from "@/prisma/client";
 import { Box, Flex, Grid } from "@radix-ui/themes";
-import { getServerSession } from "next-auth";
+import { getServerSession } from "next-auth/next";
 import { notFound } from "next/navigation";
 import AssigneeSelect from "./AssigneeSelect";
 import DeleteIssueButton from "./DeleteIssueButton";
@@ -19,6 +19,7 @@ const fetchUser = cache((issueId: number) =>
 
 const IssueDetailPage = async ({ params }: Prop) => {
   const session = await getServerSession(authOptions);
+  console.log(session)
   const issue = await fetchUser(parseInt(params.id));
   if (!issue?.id) notFound();
   return (
