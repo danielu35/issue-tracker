@@ -4,16 +4,11 @@ import { Flex } from "@radix-ui/themes";
 import { Metadata } from "next";
 import Pagination from "../component/Pagination";
 import IssuesTable, { columnNames, IssueQuery } from "./_component/IssuesTable";
+import { Status } from "./_component/status";
 import IssueActions from "./IssueActions";
 
 interface Prop {
   searchParams: IssueQuery;
-}
-
-export enum Status {
-  OPEN = "OPEN",
-  IN_PROGRESS = "IN_PROGRESS",
-  CLOSED = "CLOSED",
 }
 
 const IssuesPage = async ({ searchParams }: Prop) => {

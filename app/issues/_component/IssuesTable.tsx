@@ -3,7 +3,7 @@ import { Issues } from "@prisma/client";
 import { ArrowDownIcon, ArrowUpIcon } from "@radix-ui/react-icons";
 import { Table } from "@radix-ui/themes";
 import { default as Link, default as NextLink } from "next/link";
-import { Status } from "../page";
+import { Status } from "./status";
 
 export interface IssueQuery {
   status: Status;
@@ -74,11 +74,15 @@ const IssuesTable = async ({ searchParams, issues }: Props) => {
             <Table.Cell>
               <Link href={`/issues/${issue.id}`}>{issue.title}</Link>
               <div className="block md:hidden">
-                <IssueStatusBadge status={issue.status} />
+                <IssueStatusBadge
+                  status={Status[issue.status as keyof typeof Status]}
+                />
               </div>
             </Table.Cell>
             <Table.Cell className="hidden md:table-cell">
-              <IssueStatusBadge status={issue.status} />
+              <IssueStatusBadge
+                status={Status[issue.status as keyof typeof Status]}
+              />
             </Table.Cell>
             <Table.Cell className="hidden md:table-cell">
               {issue.createdAt.toDateString()}
