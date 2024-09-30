@@ -1,5 +1,5 @@
 import prisma from "@/prisma/client";
-import { Status } from "@prisma/client";
+// import { Status } from "@prisma/client";
 import { Flex } from "@radix-ui/themes";
 import { Metadata } from "next";
 import Pagination from "../component/Pagination";
@@ -10,8 +10,14 @@ interface Prop {
   searchParams: IssueQuery;
 }
 
+export enum Status {
+  OPEN = "OPEN",
+  IN_PROGRESS = "IN_PROGRESS",
+  CLOSED = "CLOSED",
+}
+
 const IssuesPage = async ({ searchParams }: Prop) => {
-  const statuses = Object.values(Status);
+  const statuses = Object?.values(Status);
   const status = statuses.includes(searchParams.status)
     ? searchParams.status
     : undefined;
